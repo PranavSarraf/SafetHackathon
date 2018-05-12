@@ -4,8 +4,20 @@ var processFiles = function(files, data) {
     var dateToCompare = data.dateToCompare;
     files.forEach(function(file){
         var dateRisk = getDateRisk(file, dateToCompare);
+        var riskClass = sails.config.hackathon.riskClasses.none;
+        var riskTitle = "Image Date";
+        var riskMessage = "No sign of old date found";
+        if (dateRisk.oldDatesFound.length > 0) {
+            //risky image
+            riskClass = sails.config.hackathon.riskClasses.high;
+            riskMessage = "Found signs of image being older than return delivery"
+        }
         fileResults.push({
             filename: file.filename,
+            riskClass: riskClass,
+            riskTitle: riskTitle,
+            riskMessage: riskMessage,
+            processName: "creationDate",
             dateRisk: dateRisk
         });
     });

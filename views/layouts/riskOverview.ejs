@@ -1,37 +1,20 @@
 <div>
 <table class="table">
-    <tr class="danger">
-        <td>Similar Images</td>
-        <td>5 images matching more than 90%</td>
-    </tr>
-    <tr class="danger">
-        <td>Image age</td>
-        <td><% 
-            var fileResult = fileResults[file.filename];
-            var oldImageFound = false;
-            fileResult.processResults.forEach(function(processResult){
-                if (undefined !== processResult.dateRisk) {
-                    var dateRisk = processResult.dateRisk;
-                    if (undefined !== dateRisk.oldDatesFound) {
-                        if (dateRisk.oldDatesFound.length > 0) {
-                            oldImageFound = true;
-                        }
-                    }
-                }
-            });
-            var message = "";
-            if (oldImageFound) {
-                message = "Found signs of image being older than return delivery";
-            }
-            else {
-                message = "No sign of old image found";
-            }
-            %> 
-            <%= message %></td>
-    </tr>
-    <tr class="warning">
-        <td>Image Tampering</td>
-        <td>Imprints of photo editing tools found</td>
+    <% 
+        var fileResult = fileResults[file.filename];
+        var processResults = fileResult.processResults;
+        for (processName in processResults) {
+            var processResult = processResults[processName];
+            var riskClass = processResult.riskClass;
+            var riskTitle = processResult.riskTitle;
+            var riskMessage = processResult.riskMessage;
+    %>
+    <tr class="<%= riskClass %>" >
+        <td><%= riskTitle %></td>
+        <td><%= riskMessage %></td>
+    <%
+        }
+    %>
     </tr>
 </table>
 </div>

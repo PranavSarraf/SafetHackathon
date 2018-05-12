@@ -3,19 +3,44 @@ var processFiles = function(files, data) {
     var fileResults = [];
     files.forEach(function(file){
         var softwareName = getSoftwareName(file.fd);
-        if (softwareName.length > 0) {
-            fileResults.push({
-                filename: file.filename,
-                software: softwareName
-            });
+        var riskClass = sails.config.hackathon.riskClasses.none;
+        var riskTitle = "Image Tampering";
+        var riskMessage = "No image editing software fingerprint found";
+        if (undefined !== softwareName && softwareName.length > 0) {
+            //risky image
+            riskClass = sails.config.hackathon.riskClasses.high;
+            riskMessage = "Found fingerprints of an image editing software"
         }
+        
+        fileResults.push({
+            filename: file.filename,
+            software: softwareName,
+            riskClass: riskClass,
+            riskTitle: riskTitle,
+            riskMessage: riskMessage,
+            processName: "softwareStamp"
+        });
+        
     });
     return {
         fileResults: fileResults
     };
 }
 
+var tamperingSoftwaresList = [
+    "photoshop"
+];
 
+var isTamperSoftwareFound = function(softwareName) {
+    var softwareLCase = softwareName.toLowerCase();
+    var tamperSoftwareFound = false;
+    tamperingSoftwaresList.forEach(function(knownSofwareName){
+        if (softwareLCase.includes(knownSofwareName)) {
+            tamperSoftwareFound = true;
+        }
+    });
+    return tamperSoftwareFound;
+}
 var getSoftwareName = function(fd) {
     const { spawnSync } = require('child_process');
     var filename = fd;
@@ -27,8 +52,12 @@ var getSoftwareName = function(fd) {
     } catch (err) {
         console.error("Error while gettin gdates: " + err);
     }
-    if (softwareFoundObj.Software !== undefined) {
-        return softwareFoundObj.Software
+    var softwareName = softwareFoundObj.Software;
+    if (softwareName !== undefined) {
+        var softwareLcase = softwareName.toLowerCase();
+        if (isTamperSoftwareFound(softwareName)) {
+            return softwareName;
+        }
     }
     return "";
 }

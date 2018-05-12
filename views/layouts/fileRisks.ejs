@@ -18,13 +18,13 @@
     </head>
 <body class="container">
 <main>
-    <% files.forEach(function(file) { 
+    <% files.forEach(function(file,index) { 
 
         %>
     
     <div>
-        <a href="#"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview"><%= file.filename %> </a>
-        <div id="file1overview" class="hidden">
+        <a href="#"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview_<%= index %>"><%= file.filename %> </a>
+        <div id="file1overview_<%= index %>" class="hidden">
             <% include riskOverview %>
         </div>
     <div class="progress">
@@ -32,8 +32,6 @@
         
         var progressClass = "progress-bar-success";
         var riskText = "Low Risk";
-        console.log("filename:" + file.filename);
-        console.log("Fileresults:" + JSON.stringify(fileResults));
         var fileResult = fileResults[file.filename];
         var riskFactor = fileResult.riskFactor;
         if (riskFactor > 0.5) {

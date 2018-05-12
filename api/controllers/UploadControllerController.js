@@ -13,14 +13,13 @@ processUploadedFiles = function(files, data) {
             var filename = fileResult.filename;
             if (undefined === fileResults[filename]) {
                 fileResults[filename] = {
-                    processResults:[]
+                    processResults:{}
                 };
             }
-            fileResults[filename].processResults.push(fileResult);
+            fileResults[filename].processResults[fileResult.processName] = fileResult;
         });
         
     });
-    console.log("File results:" + fileResults);
     for (filename in fileResults) {
         fileResults[filename].riskFactor = getWeight(fileResults[filename]);
     }
