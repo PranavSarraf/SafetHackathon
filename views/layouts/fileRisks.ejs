@@ -7,7 +7,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
-        
+        <style>
+            .progress-bar-yellow {
+                background-color:yellow;
+            }
+        </style>
             
 <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
@@ -30,19 +34,11 @@
     <div class="progress">
         <% 
         
-        var progressClass = "progress-bar-success";
         var riskText = "Low Risk";
         var fileResult = fileResults[file.filename];
-        var riskFactor = fileResult.riskFactor;
-        if (riskFactor > 0.5) {
-            progressClass = "progress-bar-warning";
-            riskText = "Possibly Abusive";
-        }
-        if (riskFactor > 0.8) {
-            progressClass = "progress-bar-danger"
-            riskText = "Likely abusive"
-        }
-            var riskFactorPercentage = riskFactor * 100;
+        var riskClass = fileResult.riskClass;
+        var progressClass = "progress-bar-" + riskClass.className;
+        var riskFactorPercentage = riskClass.percentage;
         %>
         <div class="progress-bar <%= progressClass %>" role="progressbar" aria-valuenow="<%= riskFactorPercentage %>" aria-valuemin="0" aria-valuemax="100" 
              style="width: <%= riskFactorPercentage %>%"><%= riskText + " / " + Math.round(riskFactorPercentage) + "%" %>

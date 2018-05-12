@@ -21,15 +21,36 @@ processUploadedFiles = function(files, data) {
         
     });
     for (filename in fileResults) {
-        fileResults[filename].riskFactor = getWeight(fileResults[filename]);
+        fileResults[filename].riskClass = getWeight(fileResults[filename]);
     }
     
     return fileResults;
 }
 
 var getWeight = function(fileResult) {
-        
-        return Math.random();
+    var isTampered = fileResult.processResults["softwareStamp"].software.length > 0;
+    var isOldImage = fileResult.processResults["creationDate"].dateRisk.oldDatesFound.length > 0;
+    var similarity = 60;
+    var riskClasses = sails.config.hackathon.riskClasses;
+    var riskClass = "";
+    var riskPercentage = 0;
+        if (isTampered || isOldImage || similarity == 100) {
+            riskClass = riskClasses.high;
+            riskPercentage = 100;
+        } else if (similarity < 50) {
+            riskClass = riskClasses.none;
+            riskPercentage = 40;
+        } else if (similarity < 85) {
+            riskClass = riskClasses.low;
+            riskPercentage = 66;
+        } else {
+            riskClass = riskClasses.high;
+            riskPercentage = 90;
+        }
+    return {
+        className: riskClass,
+        percentage: riskPercentage
+    }
 }
 
 module.exports = {
@@ -43,7 +64,8 @@ module.exports = {
                 return res.serverError(err);
             }
             //Get date input
-            var dateToCompare = new Date();
+            var dateToCompare = new Date(Date.parse(req.param("returnDeliveryDate")));
+            console.log("Date to compare:" + dateToCompare);
             var processResults = processUploadedFiles(uploadedFiles, {
                 dateToCompare: dateToCompare
             });
