@@ -25,7 +25,7 @@
           $('.materialboxed').materialbox();
           var params = parseQueryString();
 
-          var basePath = "/images/";
+          var basePath = "uploads/";
 
           if (params["usedSoftware"] === "") {
             $("#temper").text("This image was not tempered by any software");
@@ -43,8 +43,9 @@
           // console.log(html);
           $("#creation_date").append(html);
             
-            
-          $("#img-main").attr("src", basePath + params["mainImage"]);
+          console.log("Pranav");
+          console.log(basePath + params["mainImage"]);  
+          $("#img-main").attr("src", basePath + unescape(params["mainImage"]));
             var maxImages = 0;
             var i = 1;
             
@@ -62,7 +63,7 @@
                 colDiv.addClass("col").addClass("s2");
                 var img = $("<img>");
                 img.addClass("materialboxed").addClass("img-style");
-                img.attr("src", basePath + params[imageParam]);
+                img.attr("src", basePath + unescape(params[imageParam]));
                 var description = $("<div>");
                 description.text(params[imageParam+"_percentage"] + " % similar");
                 colDiv.append(img);

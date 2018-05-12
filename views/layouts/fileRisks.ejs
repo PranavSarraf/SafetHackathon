@@ -22,6 +22,12 @@
     </head>
 <body class="container">
 <main>
+   <%  function getFileName(path) {
+              var slash = path.lastIndexOf("/") + 1;
+              var dot = path.lastIndexOf(".")
+               return path.substr(slash, dot - slash)
+        }
+   %>
     <% files.forEach(function(file,index) { 
 
         %>
@@ -46,15 +52,15 @@
                 creationDateObj[oldDateFound.tag] = oldDateFound.date;
             })
             url += "&creation_date=" + JSON.stringify(creationDateObj);
-        
+            var extension = ".jpg"
             //Image similarity
             var imageSimilarityResults = processResults["imageSimilarity"];
-            var mainImageName = imageSimilarityResults.filename;
+            var mainImageName = getFileName(file.fd) + extension;
             url += "&mainImage=" + mainImageName;
             if (undefined !== imageSimilarityResults.similarity) {
                 for (i = 0; i < imageSimilarityResults.similarity.length; ++i) {
                     var similarityObj = imageSimilarityResults.similarity[i];
-                    var filename = similarityObj.filename;
+                    var filename = similarityObj.filename + extension;
                     var percentage = similarityObj.similarity * 100;
                     url += "&img" + (i+1) + "=" + filename + "&img" + (i+1) + "_percentage=" + percentage;  
                 }
