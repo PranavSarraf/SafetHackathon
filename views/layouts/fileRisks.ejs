@@ -1,0 +1,78 @@
+<!-- views/pages/about.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
+        
+            
+<!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+        
+    </head>
+<body class="container">
+<main>
+    <% files.forEach(function(file) { 
+
+        %>
+    
+    <div>
+        <a href="#"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview"><%= file.filename %> </a>
+        <div id="file1overview" class="hidden">
+            <% include riskOverview %>
+        </div>
+    <div class="progress">
+        <% 
+        
+        var progressClass = "progress-bar-success";
+        var riskText = "Low Risk";
+        console.log("filename:" + file.filename);
+        console.log("Fileresults:" + JSON.stringify(fileResults));
+        var fileResult = fileResults[file.filename];
+        var riskFactor = fileResult.riskFactor;
+        if (riskFactor > 0.5) {
+            progressClass = "progress-bar-warning";
+            riskText = "Possibly Abusive";
+        }
+        if (riskFactor > 0.8) {
+            progressClass = "progress-bar-danger"
+            riskText = "Likely abusive"
+        }
+            var riskFactorPercentage = riskFactor * 100;
+        %>
+        <div class="progress-bar <%= progressClass %>" role="progressbar" aria-valuenow="<%= riskFactorPercentage %>" aria-valuemin="0" aria-valuemax="100" 
+             style="width: <%= riskFactorPercentage %>%"><%= riskText + " / " + Math.round(riskFactorPercentage) + "%" %>
+        </div>
+</div>
+       
+    </div>
+    
+    <% }) %>
+
+
+
+</main>
+
+<footer>
+</footer>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+        placement : 'right',
+        trigger : 'hover',
+        html:true,
+        content: function() {
+            var id = $(this).data("content-div");
+            return $("#" + id).html();
+        }
+    });   
+});
+</script>
+</body>
+</html>
