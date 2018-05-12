@@ -30,7 +30,12 @@ processUploadedFiles = function(files, data) {
 var getWeight = function(fileResult) {
     var isTampered = fileResult.processResults["softwareStamp"].software.length > 0;
     var isOldImage = fileResult.processResults["creationDate"].dateRisk.oldDatesFound.length > 0;
-    var similarity = 60;
+    var similarityList = fileResult.processResults["imageSimilarity"].similarity;
+    var similarity = 0;
+    
+    if (similarityList.length > 0) {
+        similarity = similarityList.similarity * 100;
+    }
     var riskClasses = sails.config.hackathon.riskClasses;
     var riskClass = "";
     var riskPercentage = 0;
@@ -44,7 +49,7 @@ var getWeight = function(fileResult) {
             riskClass = riskClasses.low;
             riskPercentage = 66;
         } else {
-            riskClass = riskClasses.high;
+            riskClass = riskClasses.medium;
             riskPercentage = 90;
         }
     return {
@@ -65,7 +70,6 @@ module.exports = {
             }
             //Get date input
             var dateToCompare = new Date(Date.parse(req.param("returnDeliveryDate")));
-            console.log("Date to compare:" + dateToCompare);
             var processResults = processUploadedFiles(uploadedFiles, {
                 dateToCompare: dateToCompare
             });
