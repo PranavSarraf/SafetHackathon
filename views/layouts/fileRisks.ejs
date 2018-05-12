@@ -46,6 +46,19 @@
                 creationDateObj[oldDateFound.tag] = oldDateFound.date;
             })
             url += "&creation_date=" + JSON.stringify(creationDateObj);
+        
+            //Image similarity
+            var imageSimilarityResults = processResults["imageSimilarity"];
+            var mainImageName = imageSimilarityResults.filename;
+            url += "&mainImage=" + mainImageName;
+            if (undefined !== imageSimilarityResults.similarity) {
+                for (i = 0; i < imageSimilarityResults.similarity.length; ++i) {
+                    var similarityObj = imageSimilarityResults.similarity[i];
+                    var filename = similarityObj.filename;
+                    var percentage = similarityObj.similarity * 100;
+                    url += "&img" + (i+1) + "=" + filename + "&img" + (i+1) + "_percentage=" + percentage;  
+                }
+            }
         %>
         <a href="<%= url %>"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview_<%= index %>"><%= file.filename %> </a>
         <div id="file1overview_<%= index %>" class="hidden">

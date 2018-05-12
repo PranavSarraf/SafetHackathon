@@ -25,7 +25,7 @@
           $('.materialboxed').materialbox();
           var params = parseQueryString();
 
-          var basePath = "file:///Users/druprela/Desktop/";
+          var basePath = "/images/";
 
           if (params["usedSoftware"] === "") {
             $("#temper").text("This image was not tempered by any software");
@@ -43,21 +43,34 @@
           // console.log(html);
           $("#creation_date").append(html);
             
-            /*
-          $("#img-main").attr("src", basePath + params["main"]);
-          $("#img1").attr("src", basePath + params["img1"]);
-          $("#img2").attr("src", basePath + params["img2"]);
-          $("#img3").attr("src", basePath + params["img3"]);
-          $("#img4").attr("src", basePath + params["img4"]);
-          $("#img5").attr("src", basePath + params["img5"]);
+            
+          $("#img-main").attr("src", basePath + params["mainImage"]);
+            var maxImages = 0;
+            var i = 1;
+            
+                var imgRow = $("<div>").appendTo($("#images"));
+                imgRow.addClass("row");
 
-          $("#text1").text(params["text1"] + " % Similar");
-          $("#text2").text(params["text2"] + " % Similar");
-          $("#text3").text(params["text3"] + " % Similar");
-          $("#text4").text(params["text4"] + " % Similar");
-          $("#text5").text(params["text5"] + " % Similar");*/
+            for (; i <= 5; ++i) {
+                var imageParam = "img" + i;
+                console.log("image:" + imageParam);
+                if (params[imageParam] === undefined) {
+                    break;
+                }
+                console.log("Adding image");
+                var colDiv = $("<div>");
+                colDiv.addClass("col").addClass("s2");
+                var img = $("<img>");
+                img.addClass("materialboxed").addClass("img-style");
+                img.attr("src", basePath + params[imageParam]);
+                var description = $("<div>");
+                description.text(params[imageParam+"_percentage"] + " % similar");
+                colDiv.append(img);
+                colDiv.append(description);
+                imgRow.append(colDiv);
+            }
         });
-
+          
 
         var parseQueryString = function() {
             var str = window.location.search;
@@ -66,7 +79,7 @@
             str.replace(
                 new RegExp( "([^?=&]+)(=([^&]*))?", "g" ),
                 function( $0, $1, $2, $3 ){
-                    objURL[ $1 ] = $3;
+                    objURL[ $1 ] = $3.replace("%20"," ");
                 }
             );
             return objURL;
@@ -83,29 +96,8 @@
           <i class="material-icons">chevron_right</i>
           Image similarity
         </div>
-        <div class="collapsible-body">
-          <div class="row">
-            <div class="col s2">
-              <img id="img1" class="materialboxed img-style" src="">
-              <div id="text1"> % Similar</div>
-            </div>
-            <div class="col s2" id="img1">
-              <img id="img2" class="materialboxed img-style" src="">
-              <div id="text2"> % Similar</div>
-            </div>
-            <div class="col s2">
-              <img id="img3" class="materialboxed img-style" src="">
-              <div id="text3"> % Similar</div>
-            </div>
-            <div class="col s2">
-              <img id="img4" class="materialboxed img-style" src="">
-              <div id="text4"> % Similar</div>
-            </div>
-            <div class="col s2">
-              <img id="img5" class="materialboxed img-style" src="">
-              <div id="text5"> % Similar</div>
-            </div>
-          </div>
+        <div class="collapsible-body" id="images">
+          
         </div>
       </li>
       <li>
@@ -118,6 +110,7 @@
           <div id="creation_date">
             <!-- <div>adfbjhbsdf</div>
             <div>adfbjhbsdf</div> -->
+          </div>
           </div>
       </li>
       <li>
