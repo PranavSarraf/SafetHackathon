@@ -3,6 +3,7 @@
     <% 
         var fileResult = fileResults[file.filename];
         var processResults = fileResult.processResults;
+    console.log("Proces results:" + JSON.stringify(processResults));
         for (processName in processResults) {
             var processResult = processResults[processName];
             var riskClass = processResult.riskClass;
