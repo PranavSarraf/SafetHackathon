@@ -42,7 +42,7 @@ var processFiles = function (files, data) {
             riskClass = riskClasses.medium;
             riskMessage = "Found one ore more closely matching image(s)";
         } else if (highestSimilarity > 50) {
-            riskClass = riskClasses.yellow;
+            riskClass = riskClasses.low;
             riskMessage = "Found somewhat similar image(s)";
         }
         response.push({
