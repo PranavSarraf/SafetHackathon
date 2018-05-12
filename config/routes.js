@@ -27,7 +27,10 @@ module.exports.routes = {
   '/': {
     view: 'pages/homepage'
   },
-    '/uploadMultipleFiles': 'UploadControllerController/uploadMultipleFiles'
+    '/uploadMultipleFiles': 'UploadControllerController/uploadMultipleFiles',
+    '/riskDetails': {
+        view: 'pages/riskDetails'
+    }
 
   /***************************************************************************
   *                                                                          *

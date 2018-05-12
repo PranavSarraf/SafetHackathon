@@ -75,7 +75,8 @@ module.exports = {
             });
             return res.view("layouts/fileRisks", {
                 fileResults: processResults,
-                files: uploadedFiles
+                files: uploadedFiles,
+                returnDate:dateToCompare
             });
         })
     }

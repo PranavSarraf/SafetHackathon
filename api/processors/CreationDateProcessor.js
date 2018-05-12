@@ -25,6 +25,7 @@ var processFiles = function(files, data) {
         fileResults: fileResults
     };
 }
+
 var getDateRisk = function(file, dateToCompare) {
     var datesFound = getDatesFromMetadata(file.fd);
     var oldDatesFound = getOldDatesFound(datesFound, dateToCompare);

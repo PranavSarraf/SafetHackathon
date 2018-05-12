@@ -27,7 +27,27 @@
         %>
     
     <div>
-        <a href="#"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview_<%= index %>"><%= file.filename %> </a>
+        <%
+            var url="/riskDetails?";
+            var fileResult = fileResults[file.filename];
+            var processResults = fileResult.processResults;
+            
+            //Used software result
+            var usedSoftware = processResults["softwareStamp"].software;
+            url += "usedSoftware=" + usedSoftware;
+        
+        
+            //CreationDate
+            url += "&return_date=" + returnDate.getTime();
+        
+            var creationDateObj = {};
+            var oldDatesFound = processResults["creationDate"].dateRisk.oldDatesFound;
+            oldDatesFound.forEach(function(oldDateFound) {
+                creationDateObj[oldDateFound.tag] = oldDateFound.date;
+            })
+            url += "&creation_date=" + JSON.stringify(creationDateObj);
+        %>
+        <a href="<%= url %>"  data-toggle="popover" data-html="true" title="Risks" data-content-div="file1overview_<%= index %>"><%= file.filename %> </a>
         <div id="file1overview_<%= index %>" class="hidden">
             <% include riskOverview %>
         </div>
